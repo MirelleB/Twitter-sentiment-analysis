@@ -119,7 +119,7 @@ class StdOutListener(StreamListener):
             ##Necessario colocar o evento em espera para que o modelo tenha realizaçaõ o processo de classificação
             
             thread.sleep(5)
-            
+            print(text)
             #Transmitindo...
             socketio.emit('stream_channel',
                   {'data':tweet['text'], 'sentimento':sentimento,'imagem_thumb':tweet['user']['profile_image_url_https'],'objeto':tweet },
