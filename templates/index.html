@@ -1,0 +1,386 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Flask-SocketIO-TwitterStreaming Test</title>
+    
+	
+	
+	
+	
+	<script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
+	<link href="http://assets.insights.litmus.com/campaigns/tedc-2015/assets/tweets.css" type="text/css" rel="stylesheet" />
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <!-- Numeric JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
+<style>
+body {
+ margin:0;
+ padding:0;
+ display: grid;
+ background-color: #adadad33
+}
+.container {
+	margin:0 auto;
+	width:90%;
+}
+
+.tw-icon {
+	margin:0 auto;
+}
+
+/* ----------------------------------
+Twitter popup notification
+------------------------------------ */
+.notification-box {
+
+border-radius: 5px;
+
+background: -webkit-linear-gradient(#fff 0%, #ccc);
+
+position: relative;
+
+margin: 20px 0 0 0;
+
+padding-bottom: 10px;
+
+padding-top: 10px;
+
+width:48%;
+display:inline-block;
+float:right;
+}
+
+/* ----------------------------------
+notification form, input message
+------------------------------------ */
+.notification-box form {
+	background:-webkit-linear-gradient(#eee 10%, #ccc);
+	box-shadow:0 1px 0 #fff,0 1px 1px rgba(0, 0, 0, 0.5) inset, 0 0 2px #000 inset;
+	border-radius:3px;
+	height:50px;
+	margin:10px;
+}
+.notification-box form .inp-text {
+	border-radius:3px;
+	border:1px solid #999;
+	margin:7px 5px 7px 6px;
+	padding:7px;
+	box-shadow:0 1px 2px rgba(0, 0, 0, 0.2) inset, 0 0 4px rgba(0, 0, 0, 0.3) inset, 0 0 1px #fff;
+	width:290px;
+	outline:0;
+}
+.notification-box form .tweet-btn {
+	background:-webkit-linear-gradient(#28adef, #0088cc 80%, #037fbc);
+	border:1px solid #007cba;
+	border-radius:3px;
+	font-size:13px;
+	color:#fff;
+	font-weight:bold;
+	height:34px;
+	width:50px;
+	box-shadow:0 1px 0 rgba(255, 255, 255, 0.5) inset;
+}
+
+/* ----------------------------------
+twitter list tweet news
+------------------------------------ */
+.list {
+	border-bottom:1px solid #999;
+	padding:10px;
+	position:relative;
+	min-height:50px;
+	box-shadow:0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.list .avatar {
+	float:left;
+	margin-right:10px;
+}
+.list .content {
+	font-size:12px;
+	margin-right:20px;
+}
+.list .time {
+	position:absolute;
+	right:0;
+	top:0;
+	margin:10px 10px 0 0;
+	font-style:normal;
+	font-size:11px;
+	color:#aaa;
+}
+.list:last-child {
+	box-shadow:none;
+	border:0;
+}
+.mensagens{
+height:361px;
+overflow:scroll;
+}
+.notification-box h1{
+text-align:center;
+}
+
+.positive{
+box-shadow:0 2px 5px rgba(26, 255, 7, 0.1);
+background-color:rgba(26, 255, 7, 0.1)
+
+}
+
+.negative{
+box-shadow:0 2px 5px rgba(243, 16, 16, 0.1);
+background-color:rgba(243, 16, 16, 0.1);
+}
+
+.neutro{
+box-shadow:0 2px 5px rgba(12, 78, 254, 0.1);
+background-color:rgba(12, 78, 254, 0.1);
+}
+.list p{
+font-size:16px;
+font-weight:bold;
+}
+
+.bloco-header{
+background-color:#151a23e6;
+
+height: 200px;
+}
+.bloco-header h1{
+text-align:center;
+color:white;
+font-family:"Arial"
+
+}
+.bloco-header p{
+text-align:center;
+margin-top:20px;
+color:white;
+font-family:"sans-serif"
+
+}
+
+#myDiv{
+ width:49%;
+ margin-top:20px;
+ display:inline-block;
+ float:left;
+}
+
+    .sk-folding-cube {
+  margin: 20px auto;
+      width: 75px;
+    height: 75px;
+    top: 330px;
+  position: relative;
+  -webkit-transform: rotateZ(45deg);
+          transform: rotateZ(45deg);
+}
+
+.sk-folding-cube .sk-cube {
+  float: left;
+  width: 50%;
+  height: 50%;
+  position: relative;
+  -webkit-transform: scale(1.1);
+      -ms-transform: scale(1.1);
+          transform: scale(1.1); 
+}
+.sk-folding-cube .sk-cube:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  -webkit-animation: sk-foldCubeAngle 2.4s infinite linear both;
+          animation: sk-foldCubeAngle 2.4s infinite linear both;
+  -webkit-transform-origin: 100% 100%;
+      -ms-transform-origin: 100% 100%;
+          transform-origin: 100% 100%;
+}
+.sk-folding-cube .sk-cube2 {
+  -webkit-transform: scale(1.1) rotateZ(90deg);
+          transform: scale(1.1) rotateZ(90deg);
+}
+.sk-folding-cube .sk-cube3 {
+  -webkit-transform: scale(1.1) rotateZ(180deg);
+          transform: scale(1.1) rotateZ(180deg);
+}
+.sk-folding-cube .sk-cube4 {
+  -webkit-transform: scale(1.1) rotateZ(270deg);
+          transform: scale(1.1) rotateZ(270deg);
+}
+.sk-folding-cube .sk-cube2:before {
+  -webkit-animation-delay: 0.3s;
+          animation-delay: 0.3s;
+}
+.sk-folding-cube .sk-cube3:before {
+  -webkit-animation-delay: 0.6s;
+          animation-delay: 0.6s; 
+}
+.sk-folding-cube .sk-cube4:before {
+  -webkit-animation-delay: 0.9s;
+          animation-delay: 0.9s;
+}
+@-webkit-keyframes sk-foldCubeAngle {
+  0%, 10% {
+    -webkit-transform: perspective(140px) rotateX(-180deg);
+            transform: perspective(140px) rotateX(-180deg);
+    opacity: 0; 
+  } 25%, 75% {
+    -webkit-transform: perspective(140px) rotateX(0deg);
+            transform: perspective(140px) rotateX(0deg);
+    opacity: 1; 
+  } 90%, 100% {
+    -webkit-transform: perspective(140px) rotateY(180deg);
+            transform: perspective(140px) rotateY(180deg);
+    opacity: 0; 
+  } 
+}
+
+@keyframes sk-foldCubeAngle {
+  0%, 10% {
+    -webkit-transform: perspective(140px) rotateX(-180deg);
+            transform: perspective(140px) rotateX(-180deg);
+    opacity: 0; 
+  } 25%, 75% {
+    -webkit-transform: perspective(140px) rotateX(0deg);
+            transform: perspective(140px) rotateX(0deg);
+    opacity: 1; 
+  } 90%, 100% {
+    -webkit-transform: perspective(140px) rotateY(180deg);
+            transform: perspective(140px) rotateY(180deg);
+    opacity: 0; 
+  }
+}
+   .FraseDentroEfeito{
+         padding-left: 47%;
+    padding-top: 20%;
+        color: white;
+        font-size: 20px;
+
+        }
+       .window2{
+      display:none;
+        position: fixed; /* Stay in place */
+        z-index:9900; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4);
+       
+        }
+	
+
+</style>
+
+</head>
+<body>
+     <div class="window2" id="efeito_aguarde">
+
+            <div class="sk-folding-cube">
+                <div class="sk-cube1 sk-cube"></div>
+                <div class="sk-cube2 sk-cube"></div>
+                <div class="sk-cube4 sk-cube"></div>
+                <div class="sk-cube3 sk-cube"></div>
+            </div>
+
+
+        </div>
+	<div class="bloco-header">
+		    <h1>Analisys Sentiment</h1>
+			<p>Desenvolvido: Mirelle Candida Bueno</p>
+	
+	</div>
+
+    <div id="log"></div>
+	
+
+	
+		<div class="container">
+		
+			<div id="myDiv"></div>
+			<a href="#" class="tw-icon"></a>
+			<div class="notification-box">
+						<h1>Mensagens por segundo</h1> 
+				<div class="mensagens" id="insert-message">
+			
+				
+					
+				</div>
+				</div>		
+				
+			
+		</div>
+</body>
+</html>
+    <script type="text/javascript" charset="utf-8">
+	var amountNegative=0;
+	var amountNeutral=0;
+	var amountPositive=0;
+	
+			
+			
+	
+        $(document).ready(function(){
+			$("#efeito_aguarde").css('display','block')
+			var classe_sentiment="";
+            namespace = '/demo_streaming'; // change to an empty string to use the global namespace
+            // the socket.io documentation recommends sending an explicit package upon connection
+            // this is specially important when using the global namespace
+            var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
+            // event handler for server sent data
+            // the data is displayed in the "Received" section of the page
+            socket.on('stream_channel', function(msg) {
+			//console.log("Entreiiiiii")
+			
+			$("#efeito_aguarde").css('display','none')
+			console.log(msg)
+			
+			if(msg.sentimento=='Positivo'){
+			amountPositive++;
+			classe_sentiment='positive';
+			}else if(msg.sentimento=='Negativo'){
+			
+			amountNegative++;
+			classe_sentiment='negative';
+			}else{
+			amountNeutral++;
+			classe_sentiment='neutro';
+			
+			}
+			
+			
+			
+			
+			
+			
+			var data = [{
+				values: [amountPositive, amountNegative, amountNeutral],
+				labels: ['Positivo', 'Negativo', 'Neutro'],
+				type: 'pie'
+			}];
+			Plotly.newPlot('myDiv', data, {}, {showSendToCloud:true});
+			
+			var html="<div class='list "+classe_sentiment+"'>"+
+			"<img src='"+msg.imagem_thumb+"' class='avatar'>"+
+					
+					"<div class='content'>"+
+					
+						""+msg.data+""+
+						"<br/>"+
+						"<p>Sentimento Previsto: "+classe_sentiment+"</p>"
+					"</div>"
+					"<i class='time'>5 segundos</i>"+
+				"</div>"
+				
+				$("#insert-message").append(html);
+               // $('#log').append('<br>' + $('<div/>').text('SENTIMENTO ' +  msg.sentimento + ': ' + msg.data).html());
+            },1000);
+        });
+    </script>
