@@ -120,6 +120,7 @@ class StdOutListener(StreamListener):
             
             thread.sleep(5)
             print(text)
+            print(sentimento)
             #Transmitindo...
             socketio.emit('stream_channel',
                   {'data':tweet['text'], 'sentimento':sentimento,'imagem_thumb':tweet['user']['profile_image_url_https'],'objeto':tweet },
