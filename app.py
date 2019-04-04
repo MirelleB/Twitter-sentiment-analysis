@@ -38,12 +38,12 @@ if async_mode is None:
  #   except ImportError:
   #      pass
 
-    if async_mode is None:
-        try:
-            from gevent import monkey
-            async_mode = 'gevent'
-        except ImportError:
-            pass
+    #if async_mode is None:
+     #   try:
+      #      from gevent import monkey
+       #     async_mode = 'gevent'
+        #except ImportError:
+         #   pass
 
     if async_mode is None:
         async_mode = 'threading'
@@ -55,9 +55,9 @@ if async_mode is None:
 #if async_mode == 'eventlet':
  #   import eventlet
   #  eventlet.monkey_patch()
-if async_mode == 'gevent':
-        from gevent import monkey
-        monkey.patch_all()
+i#f async_mode == 'gevent':
+  #      from gevent import monkey
+   #     monkey.patch_all()
 
 
 app = Flask(__name__)
@@ -112,7 +112,7 @@ class StdOutListener(StreamListener):
             
             ##Necessario colocar o evento em espera para que o modelo tenha realizaçaõ o processo de classificação
             
-            monkey.sleep(2)
+            thread.sleep(2)
             
             #Transmitindo...
             socketio.emit('stream_channel',
