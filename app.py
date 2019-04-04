@@ -123,6 +123,7 @@ class StdOutListener(StreamListener):
             print(text)
             print(sentimento)
             #Transmitindo...
+            socketio.sleep(1)
             socketio.emit('stream_channel',
                   {'data':tweet['text'], 'sentimento':sentimento,'imagem_thumb':tweet['user']['profile_image_url_https'],'objeto':tweet },
                   namespace='/demo_streaming')
