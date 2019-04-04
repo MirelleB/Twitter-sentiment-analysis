@@ -20,7 +20,7 @@ from geventwebsocket.handler import WebSocketHandler
 from tweepy.streaming import StreamListener
 from tweepy import Stream
 import tweepy 
-
+import gevent
 
 #Carregando DataSet de treinamento/teste
 
@@ -31,33 +31,33 @@ import tweepy
 
 async_mode = None
 
-#if async_mode is None:
-#    try:
-#       import eventlet
- #       async_mode = 'eventlet'
- #   except ImportError:
-  #      pass
-
-    #if async_mode is None:
-     #   try:
-      #      from gevent import monkey
-       #     async_mode = 'gevent'
-        #except ImportError:
-         #   pass
-
 if async_mode is None:
+    #try:
+    #   import eventlet
+    #    async_mode = 'eventlet'
+    #except ImportError:
+     #   pass
+
+    if async_mode is None:
+        try:
+            from gevent import monkey
+            async_mode = 'gevent'
+        except ImportError:
+            pass
+
+    if async_mode is None:
         async_mode = 'threading'
 
-        print('async_mode is ' + async_mode)
+    print('async_mode is ' + async_mode)
 
 # monkey patching is necessary because this application uses a background
 # thread
 #if async_mode == 'eventlet':
- #   import eventlet
-  #  eventlet.monkey_patch()
-#if async_mode == 'gevent':
-  #      from gevent import monkey
-   #     monkey.patch_all()
+#    import eventlet
+#    eventlet.monkey_patch()
+if async_mode == 'gevent':
+    from gevent import monkey
+    monkey.patch_all()
 
 
 app = Flask(__name__)
@@ -112,7 +112,7 @@ class StdOutListener(StreamListener):
             
             ##Necessario colocar o evento em espera para que o modelo tenha realizaçaõ o processo de classificação
             
-            thread.sleep(2)
+            gevent.sleep(5)
             
             #Transmitindo...
             socketio.emit('stream_channel',
