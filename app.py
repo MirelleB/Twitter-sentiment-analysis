@@ -31,7 +31,7 @@ import tweepy
 
 async_mode = None
 
-if async_mode is None:
+#if async_mode is None:
 #    try:
 #       import eventlet
  #       async_mode = 'eventlet'
@@ -45,10 +45,10 @@ if async_mode is None:
         #except ImportError:
          #   pass
 
-    if async_mode is None:
+if async_mode is None:
         async_mode = 'threading'
 
-    print('async_mode is ' + async_mode)
+        print('async_mode is ' + async_mode)
 
 # monkey patching is necessary because this application uses a background
 # thread
