@@ -5,6 +5,7 @@ Created on Tue Apr  2 20:16:55 2019
 @author: Mirellebueno
 """
 ##Código de inicialização escrito com a ajuda do repositorio https://github.com/naushadzaman
+import gevent
 import os
 import re
 import json 
@@ -20,7 +21,7 @@ from geventwebsocket.handler import WebSocketHandler
 from tweepy.streaming import StreamListener
 from tweepy import Stream
 import tweepy 
-import gevent
+
 
 #Carregando DataSet de treinamento/teste
 
