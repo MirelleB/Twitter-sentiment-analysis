@@ -1,1 +1,1 @@
-gunicorn -k flask_sockets.worker -b 127.0.0.1:8000 app:app
+web: gunicorn -k flask_sockets.worker -b 127.0.0.1:8000 app:app
