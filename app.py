@@ -108,14 +108,15 @@ class StdOutListener(StreamListener):
             
             print("TWITTER ")            
             tweet = json.loads(data)
+            print("HORA DE LIMPAR")
             text = clean_twitter(tweet['text'])
-           
+            print("LIMPINHO")
             twitters=[]
             twitters.append(text)
-
+            print("PEGUEI O TEXTO")
             #sentimento=predict_twitter(train_dataset,twitter_train,target,twitters)
             sentimento=predict_twitter(twitters)
-            
+            print("SENTIMENTO"+sentimento)
             ##Necessario colocar o evento em espera para que o modelo tenha realizaçaõ o processo de classificação
             
             thread.sleep(5)
