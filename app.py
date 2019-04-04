@@ -119,7 +119,7 @@ class StdOutListener(StreamListener):
             print("SENTIMENTO"+sentimento)
             ##Necessario colocar o evento em espera para que o modelo tenha realizaçaõ o processo de classificação
             
-            thread.sleep(5)
+            #thread.sleep(5)
             print(text)
             print(sentimento)
             #Transmitindo...
