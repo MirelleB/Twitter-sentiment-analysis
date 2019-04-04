@@ -5,7 +5,7 @@ Created on Tue Apr  2 20:16:55 2019
 @author: Mirellebueno
 """
 ##Código de inicialização escrito com a ajuda do repositorio https://github.com/naushadzaman
-import gevent
+#import gevent
 import os
 import re
 import json 
@@ -115,7 +115,7 @@ class StdOutListener(StreamListener):
             
             ##Necessario colocar o evento em espera para que o modelo tenha realizaçaõ o processo de classificação
             
-            gevent.sleep(5)
+            monkey.sleep(5)
             
             #Transmitindo...
             socketio.emit('stream_channel',
