@@ -7,7 +7,7 @@ Created on Tue Apr  2 20:16:55 2019
 ##Código de inicialização escrito com a ajuda do repositorio https://github.com/naushadzaman
 #import gevent
 from gevent import monkey
-monkey.patch_all()
+
 import os
 import re
 import json 
@@ -25,13 +25,14 @@ from tweepy import Stream
 import tweepy 
 
 
+
 #Carregando DataSet de treinamento/teste
 
 #train_dataset=class_modelo.Models.read_clean_dataset()
 #twitter_train=train_dataset["Text"].values
 #target = train_dataset["Classificacao"].values
 
-
+monkey.patch_all()
 async_mode = None
 
 if async_mode is None:
