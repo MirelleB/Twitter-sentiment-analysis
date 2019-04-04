@@ -6,6 +6,8 @@ Created on Tue Apr  2 20:16:55 2019
 """
 ##Código de inicialização escrito com a ajuda do repositorio https://github.com/naushadzaman
 #import gevent
+from gevent import monkey
+monkey.patch_all()
 import os
 import re
 import json 
@@ -33,24 +35,24 @@ import tweepy
 async_mode = None
 
 if async_mode is None:
+    
     #try:
     #   import eventlet
     #    async_mode = 'eventlet'
     #except ImportError:
      #   pass
 
-    if async_mode is None:
-        try:
-            from gevent import monkey
-            async_mode = 'gevent'
-            monkey.patch_all()
-        except ImportError:
-            pass
+   # if async_mode is None:
+    #    try:
+     #       from gevent import monkey
+   async_mode = 'gevent'
+       #     monkey.patch_all()
+        #except ImportError:
+         #   pass
 
-    if async_mode is None:
-        async_mode = 'threading'
-
-    print('async_mode is ' + async_mode)
+    #if async_mode is None:
+     #   async_mode = 'threading'
+   print('async_mode is ' + async_mode)
 
 # monkey patching is necessary because this application uses a background
 # thread
