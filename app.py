@@ -32,7 +32,7 @@ import tweepy
 #twitter_train=train_dataset["Text"].values
 #target = train_dataset["Classificacao"].values
 
-monkey.patch_all()
+#monkey.patch_all()
 async_mode = None
 
 if async_mode is None:
@@ -67,7 +67,7 @@ if async_mode is None:
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'vnkdjnfjknfl1232#'
-socketio = SocketIO(app, async_mode=async_mode,ping_timeout=30)
+socketio = SocketIO(app, async_mode="threading",ping_timeout=30)
 thread = None
 
 ## Keys Twitter API
