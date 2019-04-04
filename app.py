@@ -42,6 +42,7 @@ if async_mode is None:
         try:
             from gevent import monkey
             async_mode = 'gevent'
+            monkey.patch_all()
         except ImportError:
             pass
 
@@ -55,9 +56,9 @@ if async_mode is None:
 #if async_mode == 'eventlet':
 #    import eventlet
 #    eventlet.monkey_patch()
-if async_mode == 'gevent':
-    from gevent import monkey
-    monkey.patch_all()
+#if async_mode == 'gevent':
+ #   from gevent import monkey
+  #  monkey.patch_all()
 
 
 app = Flask(__name__)
