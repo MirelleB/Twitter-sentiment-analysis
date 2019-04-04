@@ -21,3 +21,5 @@ Werkzeug==0.10.4
 wheel==0.26.0
 pandas==0.23.0
 nltk==3.3
+scikit-image==0.13.1
+scikit-learn==0.19.1
