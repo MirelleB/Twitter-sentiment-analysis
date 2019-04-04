@@ -78,7 +78,7 @@ access_token_secret = '881rNts3uPn11xfNLDrach4gpC6INgsklY76KfIausmfM'
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token,access_token_secret)
 
-
+print("Autentificão")
 #Metodo responsavel por limpar o texto para o processamento
 def clean_twitter(text): 
     twitter_clean=' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)", " ", text).split())
@@ -102,7 +102,7 @@ class StdOutListener(StreamListener):
     def on_data(self, data):
         try: 
             
-            
+            print("Twtter ")            
             tweet = json.loads(data)
             text = clean_twitter(tweet['text'])
            
@@ -130,6 +130,7 @@ class StdOutListener(StreamListener):
 
 
 def background_thread():
+    print("INICIALIZOU BACKEND")
     stream = Stream(auth, l)
     #_keywords = [':-)', ':-(']
     
@@ -140,7 +141,7 @@ def background_thread():
 @app.route('/')
 def index():
     
-    
+    print("INICIALIZOU INDEX")
     global thread
     if thread is None:
         thread = Thread(target=background_thread)
