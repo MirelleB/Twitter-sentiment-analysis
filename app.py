@@ -5,6 +5,7 @@ Created on Tue Apr  2 20:16:55 2019
 @author: Mirellebueno
 """
 ##Código de inicialização escrito com a ajuda do repositorio https://github.com/naushadzaman
+import os
 import re
 import json 
 import time
