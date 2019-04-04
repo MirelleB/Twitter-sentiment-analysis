@@ -148,4 +148,5 @@ def index():
 l = StdOutListener()
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True) # <host_ip_address> -- replace it with the IP address of your server where you are hosting 
+    port = int(os.environ.get('PORT', 5000))
+    socketio.run(app, host="0.0.0.0", port=port, debug=True) # <host_ip_address> -- replace it with the IP address of your server where you are hosting 
