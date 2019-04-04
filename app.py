@@ -152,6 +152,7 @@ l = StdOutListener()
 
 if __name__ == '__main__':
     #port = int(os.environ.get('PORT', 5000))
-    server = WSGIServer(("0.0.0.0", 5000), app, handler_class=WebSocketHandler)
-    server.serve_forever()
+    #server = WSGIServer(("0.0.0.0", 5000), app, handler_class=WebSocketHandler)
+    #server.serve_forever()
+    socketio.run(app, debug=True, host='127.0.0.1')
    #socketio.run(app, host="0.0.0.0", debug=True) # <host_ip_address> -- replace it with the IP address of your server where you are hosting 
