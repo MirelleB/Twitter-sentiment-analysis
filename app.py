@@ -14,8 +14,8 @@ from threading import Thread
 from flask import Flask, render_template, session, request
 from flask_socketio import SocketIO, emit, join_room, leave_room, \
     close_room, rooms, disconnect
-#from gevent.pywsgi import WSGIServer
-#from geventwebsocket.handler import WebSocketHandler
+from gevent.pywsgi import WSGIServer
+from geventwebsocket.handler import WebSocketHandler
     
 from tweepy.streaming import StreamListener
 from tweepy import Stream
@@ -32,11 +32,11 @@ import tweepy
 async_mode = None
 
 if async_mode is None:
-   # try:
-    #    import eventlet
-     #   async_mode = 'eventlet'
-    #except ImportError:
-  #      pass
+    try:
+        import eventlet
+        async_mode = 'eventlet'
+    except ImportError:
+        pass
 
     if async_mode is None:
         try:
@@ -52,12 +52,12 @@ if async_mode is None:
 
 # monkey patching is necessary because this application uses a background
 # thread
-#if async_mode == 'eventlet':
- #   import eventlet
-  #  eventlet.monkey_patch()
-if async_mode == 'gevent':
-        from gevent import monkey
-        monkey.patch_all()
+if async_mode == 'eventlet':
+    import eventlet
+    eventlet.monkey_patch()
+elif async_mode == 'gevent':
+    from gevent import monkey
+    monkey.patch_all()
 
 
 app = Flask(__name__)
@@ -112,7 +112,7 @@ class StdOutListener(StreamListener):
             
             ##Necessario colocar o evento em espera para que o modelo tenha realizaçaõ o processo de classificação
             
-            #eventlet.sleep(5)
+            eventlet.sleep(5)
             
             #Transmitindo...
             socketio.emit('stream_channel',
