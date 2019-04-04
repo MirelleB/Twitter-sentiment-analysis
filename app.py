@@ -115,7 +115,7 @@ class StdOutListener(StreamListener):
             
             ##Necessario colocar o evento em espera para que o modelo tenha realizaçaõ o processo de classificação
             
-            monkey.sleep(5)
+            thread.sleep(5)
             
             #Transmitindo...
             socketio.emit('stream_channel',
