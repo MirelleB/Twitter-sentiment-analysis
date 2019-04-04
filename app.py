@@ -97,12 +97,13 @@ def predict_twitter(twtter_test):
 
 class StdOutListener(StreamListener):
     def __init__(self):
+        print("ENTREI NA CLASSE")
         pass 
         
     def on_data(self, data):
         try: 
             
-            print("Twtter ")            
+            print("TWITTER ")            
             tweet = json.loads(data)
             text = clean_twitter(tweet['text'])
            
@@ -136,6 +137,7 @@ def background_thread():
     
     ##Apenas na Linguagem Portuguese
     stream.filter(follow=None, track='politica', languages=["pt"]) 
+    print("SAAAAAAAAAI")
 
 
 @app.route('/')
