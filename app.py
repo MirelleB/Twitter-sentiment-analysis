@@ -23,7 +23,7 @@ from geventwebsocket.handler import WebSocketHandler
 from tweepy.streaming import StreamListener
 from tweepy import Stream
 import tweepy 
-
+from queue import Queue
 
 
 async_mode = None
@@ -51,6 +51,8 @@ access_token_secret = '881rNts3uPn11xfNLDrach4gpC6INgsklY76KfIausmfM'
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token,access_token_secret)
 
+q = Queue()
+
 print("Autentificão")
 #Metodo responsavel por limpar o texto para o processamento
 def clean_twitter(text): 
@@ -70,45 +72,46 @@ def predict_twitter(twtter_test):
 
 class StdOutListener(StreamListener):
     def __init__(self):
-        
+       
         pass 
         
     def on_data(self, data):
         try: 
-            
-          
-            
+            print("PEGUEI O DADO")
             tweet = json.loads(data)
-            
-            text = clean_twitter(tweet['text'])
-          
-            twitters=[]
-            twitters.append(text)
-            
-            #sentimento=predict_twitter(train_dataset,twitter_train,target,twitters)
-            sentimento=predict_twitter(twitters)
-            
-         
-            
-            #thread.sleep(5)
-            print(text)
-            print(sentimento)
-            #Transmitindo...
-            #socketio.sleep(5)
-            time.sleep(5)
-            socketio.emit('stream_channel',
-                  {'data':tweet['text'], 'sentimento':sentimento,'imagem_thumb':tweet['user']['profile_image_url_https'],'objeto':tweet },
-                  namespace='/demo_streaming')
-           
-            
+            q.put(tweet)
         except: 
             pass 
 
     def on_error(self, status):
         print('Error status code', status)
         exit()
+        
 
-
+        
+def do_stuff():
+     while True:
+        print("PROCESSAR O DADO E SAIR")
+        predicao(q.get())
+        #q.task_done()
+            
+   
+def predicao(twtter_obtido):
+    
+    print("LIMPEZA")
+    text = clean_twitter(twtter_obtido['text'])
+          
+    twitters=[]
+    twitters.append(text)
+            
+            #sentimento=predict_twitter(train_dataset,twitter_train,target,twitters)
+    sentimento=predict_twitter(twitters)
+    
+    print("PREDICAO"+sentimento)
+    socketio.emit('stream_channel',
+                  {'data':twtter_obtido['text'], 'sentimento':sentimento,'imagem_thumb':twtter_obtido['user']['profile_image_url_https'],'objeto':twtter_obtido },
+                  namespace='/demo_streaming')
+    
 def background_thread():
     print("INICIALIZOU BACKEND")
     stream = Stream(auth, l)
@@ -125,10 +128,15 @@ def index():
     
     global thread
     if thread is None:
-        thread = Thread(target=background_thread)
-        thread.daemon = True
-        thread.start()
-        
+          thread = Thread(target=background_thread)
+          thread.daemon = True
+          thread.start()
+          
+          #Criando Thread para ler os twttwes
+          thread_twtter = Thread(target=do_stuff)
+          thread_twtter.daemon = True
+          thread_twtter.start()
+    #background_thread()   
     return render_template('index.html')
 
 
