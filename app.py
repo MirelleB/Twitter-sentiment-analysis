@@ -76,7 +76,7 @@ class StdOutListener(StreamListener):
     def on_data(self, data):
         try: 
             
-            time.sleep(5)
+          
             
             tweet = json.loads(data)
             
@@ -95,6 +95,7 @@ class StdOutListener(StreamListener):
             print(sentimento)
             #Transmitindo...
             #socketio.sleep(5)
+            time.sleep(5)
             socketio.emit('stream_channel',
                   {'data':tweet['text'], 'sentimento':sentimento,'imagem_thumb':tweet['user']['profile_image_url_https'],'objeto':tweet },
                   namespace='/demo_streaming')
