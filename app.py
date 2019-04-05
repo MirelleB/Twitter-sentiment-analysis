@@ -23,46 +23,16 @@ from geventwebsocket.handler import WebSocketHandler
 from tweepy.streaming import StreamListener
 from tweepy import Stream
 import tweepy 
+from queue import Queue
 
 
-
-#Carregando DataSet de treinamento/teste
-
-#train_dataset=class_modelo.Models.read_clean_dataset()
-#twitter_train=train_dataset["Text"].values
-#target = train_dataset["Classificacao"].values
-
-#monkey.patch_all()
 async_mode = None
 
 if async_mode is None:
     
-    #try:
-    #   import eventlet
-    #    async_mode = 'eventlet'
-    #except ImportError:
-     #   pass
-
-   # if async_mode is None:
-    #    try:
-     #       from gevent import monkey
    async_mode = 'gevent'
-       #     monkey.patch_all()
-        #except ImportError:
-         #   pass
-
-    #if async_mode is None:
-     #   async_mode = 'threading'
+      
    print('async_mode is ' + async_mode)
-
-# monkey patching is necessary because this application uses a background
-# thread
-#if async_mode == 'eventlet':
-#    import eventlet
-#    eventlet.monkey_patch()
-#if async_mode == 'gevent':
- #   from gevent import monkey
-  #  monkey.patch_all()
 
 
 app = Flask(__name__)
@@ -99,43 +69,52 @@ def predict_twitter(twtter_test):
         return classe_predita
 
 class StdOutListener(StreamListener):
-    def __init__(self):
-        print("ENTREI NA CLASSE")
+    def __init__(self,q = Queue()):
+        num_worker_threads = 4
+        self.q = q
+        for i in range(num_worker_threads):
+            t = Thread(target=self.do_stuff)
+            t.daemon = True
+            t.start()        
         pass 
         
     def on_data(self, data):
         try: 
-            
-            print("TWITTER ")            
+            print("PEGUEI O DADO")
             tweet = json.loads(data)
-            print("HORA DE LIMPAR")
-            text = clean_twitter(tweet['text'])
-            print("LIMPINHO")
-            twitters=[]
-            twitters.append(text)
-            print("PEGUEI O TEXTO")
-            #sentimento=predict_twitter(train_dataset,twitter_train,target,twitters)
-            sentimento=predict_twitter(twitters)
-            print("SENTIMENTO"+sentimento)
-            ##Necessario colocar o evento em espera para que o modelo tenha realizaçaõ o processo de classificação
-            
-            #thread.sleep(5)
-            print(text)
-            print(sentimento)
-            #Transmitindo...
-            socketio.sleep(1)
-            socketio.emit('stream_channel',
-                  {'data':tweet['text'], 'sentimento':sentimento,'imagem_thumb':tweet['user']['profile_image_url_https'],'objeto':tweet },
-                  namespace='/demo_streaming')
-            
+            self.q.put(tweet)
         except: 
             pass 
 
     def on_error(self, status):
         print('Error status code', status)
         exit()
+        
 
-
+        
+    def do_stuff(self):
+        while True:
+            print("PROCESSAR O DADO E SAIR")
+            predicao(self.q.get())
+            self.q.task_done()
+            
+   
+def predicao(twtter_obtido):
+    
+    print("LIMPEZA")
+    text = clean_twitter(twtter_obtido['text'])
+          
+    twitters=[]
+    twitters.append(text)
+            
+            #sentimento=predict_twitter(train_dataset,twitter_train,target,twitters)
+    sentimento=predict_twitter(twitters)
+    
+    print("PREDICAO"+sentimento)
+    socketio.emit('stream_channel',
+                  {'data':twtter_obtido['text'], 'sentimento':sentimento,'imagem_thumb':twtter_obtido['user']['profile_image_url_https'],'objeto':twtter_obtido },
+                  namespace='/demo_streaming')
+    
 def background_thread():
     print("INICIALIZOU BACKEND")
     stream = Stream(auth, l)
@@ -143,19 +122,20 @@ def background_thread():
     
     ##Apenas na Linguagem Portuguese
     stream.filter(follow=None, track='politica', languages=["pt"]) 
-    print("SAAAAAAAAAI")
+    
 
 
 @app.route('/')
 def index():
     
-    print("INICIALIZOU INDEX")
-    global thread
-    if thread is None:
-        thread = Thread(target=background_thread)
-        thread.daemon = True
-        thread.start()
-        
+    
+    #global thread
+    #if thread is None:
+     #   thread = Thread(target=background_thread)
+      #  thread.daemon = True
+       # thread.start()
+       
+    background_thread()   
     return render_template('index.html')
 
 
