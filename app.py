@@ -93,7 +93,7 @@ class StdOutListener(StreamListener):
 
         
     def do_stuff(self):
-        while True:
+        #while True:
             print("PROCESSAR O DADO E SAIR")
             predicao(self.q.get())
             self.q.task_done()
