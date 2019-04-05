@@ -93,7 +93,7 @@ def do_stuff():
      while True:
         print("PROCESSAR O DADO E SAIR")
         predicao(q.get())
-        #q.task_done()
+        q.task_done()
             
    
 def predicao(twtter_obtido):
