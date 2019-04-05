@@ -79,8 +79,8 @@ class StdOutListener(StreamListener):
         try: 
             print("PEGUEI O DADO")
             tweet = json.loads(data)
-            q.put(tweet)
-            time.sleep(5)
+            do_stuff(tweet)
+            time.sleep(10)
         except: 
             pass 
 
@@ -90,13 +90,13 @@ class StdOutListener(StreamListener):
         
 
         
-def do_stuff():
-     while True:
-        time.sleep(5)
-        print("PROCESSAR O DADO E SAIR")
+def do_stuff(texto):
+     #while True:
+      #  time.sleep(5)
+       # print("PROCESSAR O DADO E SAIR")
         
-        predicao(q.get())
-        q.task_done()
+        predicao(texto)
+        #q.task_done()
         
             
    
@@ -136,10 +136,6 @@ def index():
           thread.daemon = True
           thread.start()
           
-          #Criando Thread para ler os twttwes
-          thread_twtter = Thread(target=do_stuff)
-          thread_twtter.daemon = True
-          thread_twtter.start()
     #background_thread()   
     return render_template('index.html')
 
