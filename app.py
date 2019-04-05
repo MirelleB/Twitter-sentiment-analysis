@@ -95,7 +95,7 @@ def do_stuff():
         
         predicao(q.get())
         q.task_done()
-        time.sleep(5)
+        #time.sleep(5)
             
    
 def predicao(twtter_obtido):
