@@ -80,6 +80,7 @@ class StdOutListener(StreamListener):
             print("PEGUEI O DADO")
             tweet = json.loads(data)
             q.put(tweet)
+            time.sleep(5)
         except: 
             pass 
 
@@ -91,11 +92,12 @@ class StdOutListener(StreamListener):
         
 def do_stuff():
      while True:
+        time.sleep(5)
         print("PROCESSAR O DADO E SAIR")
         
         predicao(q.get())
         q.task_done()
-        #time.sleep(5)
+        
             
    
 def predicao(twtter_obtido):
