@@ -4,8 +4,8 @@ Created on Tue Apr  2 20:16:55 2019
 
 @author: Mirellebueno
 """
-##Código de inicialização escrito com a ajuda do repositorio https://github.com/naushadzaman
-#import gevent
+
+
 from gevent import monkey
 
 import os
@@ -26,15 +26,6 @@ import tweepy
 from queue import Queue
 
 
-async_mode = None
-
-if async_mode is None:
-    
-   async_mode = 'gevent'
-      
-   print('async_mode is ' + async_mode)
-
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'vnkdjnfjknfl1232#'
 socketio = SocketIO(app, async_mode="threading",ping_timeout=30)
@@ -47,14 +38,14 @@ access_token = '2666103462-34DtnGcugMlXiTe2eBfvKn3NcqtKtjtk4E0nwIk'
 access_token_secret = '881rNts3uPn11xfNLDrach4gpC6INgsklY76KfIausmfM'
 
 
-##Autentificação
+##Authentication API
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token,access_token_secret)
 
 q = Queue()
 
-print("Autentificão")
-#Metodo responsavel por limpar o texto para o processamento
+
+#Method to clear the text
 def clean_twitter(text): 
     twitter_clean=' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)", " ", text).split())
     twitter_clean=twitter_clean.replace('RT', '')
@@ -65,22 +56,24 @@ def clean_twitter(text):
     twitter_clean=twitter_clean.replace("RT ", "")
     return twitter_clean
 
+#Method returns predicted class of new twitter 
 def predict_twitter(twtter_test):
     
-        classe_predita= class_modelo.Models.predict(twtter_test)[0];
-        return classe_predita
+        predicted_class= class_modelo.Models.predict(twtter_test)[0];
+        return predicted_class
 
-class StdOutListener(StreamListener):
+#class Stream Listener
+class TwitterListener(StreamListener):
     def __init__(self):
        
         pass 
         
     def on_data(self, data):
         try: 
-            print("PEGUEI O DADO")
+           
             tweet = json.loads(data)
-            do_stuff(tweet)
-            time.sleep(10)
+            text_processing(tweet)
+            time.sleep(5)
         except: 
             pass 
 
@@ -89,39 +82,25 @@ class StdOutListener(StreamListener):
         exit()
         
 
-        
-def do_stuff(texto):
-     #while True:
-      #  time.sleep(5)
-       # print("PROCESSAR O DADO E SAIR")
-        
-        predicao(texto)
-        #q.task_done()
-        
-            
-   
-def predicao(twtter_obtido):
+#Method to process and return result for socketio
+def text_processing(get_tweet):
     
-    print("LIMPEZA")
-    text = clean_twitter(twtter_obtido['text'])
+    text = clean_twitter(get_tweet['text'])
           
     twitters=[]
     twitters.append(text)
             
-            #sentimento=predict_twitter(train_dataset,twitter_train,target,twitters)
-    sentimento=predict_twitter(twitters)
     
-    print("PREDICAO"+sentimento)
+    sentiment=predict_twitter(twitters)
     socketio.emit('stream_channel',
-                  {'data':twtter_obtido['text'], 'sentimento':sentimento,'imagem_thumb':twtter_obtido['user']['profile_image_url_https'],'objeto':twtter_obtido },
+                  {'data':get_tweet['text'], 'sentimento':sentiment,'imagem_thumb':get_tweet['user']['profile_image_url_https'],'objeto':get_tweet },
                   namespace='/demo_streaming')
+        
+            
+   
     
 def background_thread():
-    print("INICIALIZOU BACKEND")
     stream = Stream(auth, l)
-    #_keywords = [':-)', ':-(']
-    
-    ##Apenas na Linguagem Portuguese
     stream.filter(follow=None, track='politica', languages=["pt"]) 
     
 
@@ -135,16 +114,13 @@ def index():
           thread = Thread(target=background_thread)
           thread.daemon = True
           thread.start()
-          
-    #background_thread()   
+           
     return render_template('index.html')
 
 
-l = StdOutListener()
+l = TwitterListener()
 
 if __name__ == '__main__':
-    #port = int(os.environ.get('PORT', 5000))
     server = WSGIServer(("0.0.0.0", 5000), app, handler_class=WebSocketHandler)
     server.serve_forever()
-    #socketio.run(app, debug=True, host='127.0.0.1')
-   #socketio.run(app, host="0.0.0.0", debug=True) # <host_ip_address> -- replace it with the IP address of your server where you are hosting 
+    
