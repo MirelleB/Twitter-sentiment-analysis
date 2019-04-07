@@ -94,10 +94,11 @@ class TwitterListener(StreamListener):
 
 #Method to process and return result for socketio
 def text_processing():
-    
+    print("ENTREI")
     consumer = KafkaConsumer('twitter_stream', bootstrap_servers=['http://twitter-sentiment-analysi.herokuapp.com/'], auto_offset_reset='earliest',enable_auto_commit=True,group_id='my-group',value_deserializer=lambda x: loads(x.decode('utf-8')))
     
     for get_tweet in consumer:
+        print("Entrei no consumer",get_tweet)
         text = clean_twitter(get_tweet['text'])
           
         twitters=[]
@@ -124,6 +125,7 @@ def index():
     
     global thread
     if thread is None:
+          print("VAMOS LA")
           thread = Thread(target=background_thread)
           thread.daemon = True
           thread.start()
