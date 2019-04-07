@@ -101,8 +101,8 @@ def text_processing(get_tweet):
    
     
 def background_thread():
-    stream = Stream(auth, l)
-    stream.filter(follow=None, track='politica',retry_delay=5, languages=["pt"]) 
+    stream = Stream(auth, l,retry_delay=5)
+    stream.filter(follow=None, track='politica', languages=["pt"]) 
     
 
 
