@@ -146,19 +146,22 @@ background-color:#151a23e6;
 
 height: 200px;
 }
+
 .bloco-header h1{
 text-align:center;
 color:white;
-font-family:"Arial"
+font-family:"Arial";
 
 }
 .bloco-header p{
 text-align:center;
 margin-top:20px;
 color:white;
-font-family:"sans-serif"
+font-family:"Arial"
 
 }
+
+
 
 #myDiv{
  width:49%;
@@ -276,7 +279,11 @@ font-family:"sans-serif"
        
         }
 	
-
+.logo{
+width:100%;
+text-align:center;
+cursor:pointer;
+}
 </style>
 
 </head>
@@ -293,8 +300,13 @@ font-family:"sans-serif"
 
         </div>
 	<div class="bloco-header">
-		    <h1>Analisys Sentiment</h1>
+			
+		    <h1>Twitter sentiment analysis</h1>
 			<p>Desenvolvido: Mirelle Candida Bueno</p>
+			<div class="logo">
+			<a href="https://github.com/codloverS2/Twitter-sentiment-analysis" target="_blank"><img src="../img/git.png" width="50px" height="50px"></a>
+			</div>
+			
 	
 	</div>
 
@@ -367,11 +379,12 @@ font-family:"sans-serif"
 			
 			
 			
-			
-			
 			var data = [{
 				values: [amountPositive, amountNegative, amountNeutral],
 				labels: ['Positivo', 'Negativo', 'Neutro'],
+				 marker: {
+						colors:['rgba(26, 255, 7, 0.1)','rgba(243, 16, 16, 0.1)','rgba(12, 78, 254, 0.1)']
+					},
 				type: 'pie'
 			}];
 			Plotly.newPlot('myDiv', data, {}, {showSendToCloud:true});
