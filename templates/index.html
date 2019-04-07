@@ -393,7 +393,9 @@ cursor:pointer;
 			
 			
 			var data_bolha = [{
-				values: [amountPositive, amountNegative, amountNeutral],
+				x: [amountPositive, amountNegative, amountNeutral],
+				y: [amountPositive, amountNegative, amountNeutral],
+
 				mode: 'markers',
 				labels: ['Positivo', 'Negativo', 'Neutro'],
 				 marker: {
@@ -409,7 +411,7 @@ cursor:pointer;
 				};
 			Plotly.newPlot('grafico-bolha', data_bolha, layout);
 			
-			
+				
 			var html="<div class='list "+classe_sentiment+"'>"+
 			"<img src='"+msg.imagem_thumb+"' class='avatar'>"+
 					
