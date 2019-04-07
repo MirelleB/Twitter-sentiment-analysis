@@ -23,14 +23,42 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn import metrics
 from sklearn.model_selection import cross_val_predict
+from sklearn.ensemble import VotingClassifier
+from sklearn.neural_network import MLPClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import LinearSVC
+from sklearn.ensemble import RandomForestClassifier
 
 
 
 class Models:
-
     
 
-    def read_clean_dataset():
+    def __init__(self):
+        
+        print("INICIALIZANDO")
+        train_dataset=Models.read_clean_dataset()
+        twitter_train=train_dataset["Text"].values
+        self.target =train_dataset["Classificacao"].values
+        self.stopwords = nltk.corpus.stopwords.words('portuguese')
+         
+        #Vectorize the words 
+        self.vectorizer = CountVectorizer(ngram_range = (1, 2),stop_words=self.stopwords)
+        self.freq_tweets = self.vectorizer.fit_transform(twitter_train)
+        
+        self.models = []
+        self.models.append(('LR', LogisticRegression(C=1)))
+        self.models.append(('SVC', LinearSVC(C=0.5)))
+        self.models.append(('NB', MultinomialNB()))
+        self.models.append(('Random Forest', RandomForestClassifier(n_estimators = 100)))
+        self.models.append(('MLP',MLPClassifier(solver='lbfgs', alpha=1e-5,hidden_layer_sizes=(5, 2), random_state=1)))
+        
+        
+        for model in self.models:
+            model.fit(self.freq_tweets,self.target)
+  
+        print("TERMINEI")
+    def read_clean_dataset(self):
     
         dataset = pd.read_csv('Tweets_Mg.csv',encoding='utf-8')
 
@@ -57,27 +85,21 @@ class Models:
  
 
 
-    def predict(new_twitter):
-        
-        train_dataset=Models.read_clean_dataset()
-        twitter_train=train_dataset["Text"].values
-        target = train_dataset["Classificacao"].values
-        stopwords = nltk.corpus.stopwords.words('portuguese')
-         ##Remove the stop Words
-         
-         
-        #Vectorize the words 
-        vectorizer = CountVectorizer(ngram_range = (1, 2),stop_words=stopwords)
-        freq_tweets = vectorizer.fit_transform(twitter_train)
-
-        model = MultinomialNB()
-        model.fit(freq_tweets, target)
-       
+    def predict(self,new_twitter):
+        print("ENTREI NO PREDICT")
     
-        freq_test = vectorizer.transform(new_twitter)
-        results=model.predict(freq_test)
+        freq_test = self.vectorizer.transform(new_twitter)
+        
+        
+        
+        ensemble = VotingClassifier(self.models)
+        print("SAI DO ENSEMBLE")
+        ensemble.fit(self.freq_tweets, self.target)
+        print("FINALIZEI TESTE")
+        y_ensemble=ensemble.predict(freq_test)
+        print("ALOOO BRASIL RETORNANDO")
         #print("concuit")
-        return results
+        return y_ensemble
 
 
 

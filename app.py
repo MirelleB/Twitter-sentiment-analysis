@@ -59,8 +59,10 @@ def clean_twitter(text):
 
 #Method returns predicted class of new twitter 
 def predict_twitter(twtter_test):
-    
-        predicted_class= class_modelo.Models.predict(twtter_test)[0];
+        print('Entrei na PREDICAO')
+        predict_class_model=class_modelo.Models();
+        predicted_class= predict_class_model.predict(twtter_test)[0];
+        print("CLASSE PREDITA")
         return predicted_class
 
 #class Stream Listener
