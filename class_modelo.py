@@ -63,7 +63,7 @@ class Models:
             model.fit(self.freq_tweets,self.target)
   
         print("TERMINEI")
-    def read_clean_dataset(self):
+    def read_clean_dataset():
     
         dataset = pd.read_csv('Tweets_Mg.csv',encoding='utf-8')
 
