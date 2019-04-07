@@ -50,7 +50,7 @@ q = Queue()
 
 
 # Kafka Configuration
-producer = KafkaProducer(bootstrap_servers=['http://twitter-sentiment-analysi.herokuapp.com/'], value_serializer=lambda x: dumps(x).encode('utf-8'))
+producer = KafkaProducer(bootstrap_servers=['KAFKA_URL'], value_serializer=lambda x: dumps(x).encode('utf-8'))
                         
 
 #Method to clear the text
@@ -95,7 +95,7 @@ class TwitterListener(StreamListener):
 #Method to process and return result for socketio
 def text_processing():
     print("ENTREI")
-    consumer = KafkaConsumer('twitter_stream', bootstrap_servers=['http://twitter-sentiment-analysi.herokuapp.com/'], auto_offset_reset='earliest',enable_auto_commit=True,group_id='my-group',value_deserializer=lambda x: loads(x.decode('utf-8')))
+    consumer = KafkaConsumer('twitter_stream', bootstrap_servers=['KAFKA_URL'], auto_offset_reset='earliest',enable_auto_commit=True,group_id='my-group',value_deserializer=lambda x: loads(x.decode('utf-8')))
     
     for get_tweet in consumer:
         print("Entrei no consumer",get_tweet)
