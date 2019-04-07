@@ -48,7 +48,7 @@ class Models:
         self.vectorizer = CountVectorizer(ngram_range = (1, 2),stop_words=self.stopwords)
         self.freq_tweets = self.vectorizer.fit_transform(twitter_train)
         
-         print("OBTIVE FREQUENCIA")
+        print("OBTIVE FREQUENCIA")
         
         self.models = []
         self.models.append(('LR', LogisticRegression(C=1)))
