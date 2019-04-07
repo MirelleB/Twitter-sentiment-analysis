@@ -94,6 +94,7 @@ def text_processing(get_tweet):
             
     
     sentiment=predict_twitter(twitters)
+    print('SENTIMENTO',sentiment)
     socketio.emit('stream_channel',
                   {'data':get_tweet['text'], 'sentimento':sentiment,'imagem_thumb':get_tweet['user']['profile_image_url_https'],'objeto':get_tweet },
                   namespace='/demo_streaming')
