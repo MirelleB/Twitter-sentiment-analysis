@@ -60,7 +60,7 @@ class Models:
         
         for i in range(5):
             print("TRENEI")
-            self.models[i].fit(self.freq_tweets,self.target)
+            self.models[i][1].fit(self.freq_tweets,self.target)
   
         print("TERMINEI")
     def read_clean_dataset():
