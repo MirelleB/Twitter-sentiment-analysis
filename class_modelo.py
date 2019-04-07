@@ -62,6 +62,9 @@ class Models:
             print("TRENEI")
             self.models[i][1].fit(self.freq_tweets,self.target)
   
+        self.ensemble = VotingClassifier(self.models)
+        
+        self.ensemble.fit(self.freq_tweets, self.target)
         print("TERMINEI")
     def read_clean_dataset():
     
@@ -95,13 +98,7 @@ class Models:
     
         freq_test = self.vectorizer.transform(new_twitter)
         
-        
-        
-        ensemble = VotingClassifier(self.models)
-        print("SAI DO ENSEMBLE")
-        ensemble.fit(self.freq_tweets, self.target)
-        print("FINALIZEI TESTE")
-        y_ensemble=ensemble.predict(freq_test)
+        y_ensemble=self.ensemble.predict(freq_test)
         print("ALOOO BRASIL RETORNANDO")
         #print("concuit")
         return y_ensemble
