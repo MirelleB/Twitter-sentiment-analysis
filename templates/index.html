@@ -325,7 +325,9 @@ cursor:pointer;
 				
 					
 				</div>
-				</div>		
+				</div>	
+
+				<div id="grafico-bolha"></div>
 				
 			
 		</div>
@@ -388,6 +390,25 @@ cursor:pointer;
 				type: 'pie'
 			}];
 			Plotly.newPlot('myDiv', data, {}, {showSendToCloud:true});
+			
+			
+			var data_bolha = [{
+				values: [amountPositive, amountNegative, amountNeutral],
+				mode: 'markers'
+				labels: ['Positivo', 'Negativo', 'Neutro'],
+				 marker: {
+						colors:['rgba(20, 218, 20, 0.62)','rgba(237, 10, 10, 0.83)','rgba(51, 51, 224, 0.8)']
+					},
+				size: [amountPositive, amountNegative, amountNeutral]
+			}];
+			var layout = {
+					title: 'Marker Size and Color',
+					showlegend: false,
+					height: 600,
+					width: 600
+				};
+			Plotly.newPlot('grafico-bolha', data_bolha, layout});
+			
 			
 			var html="<div class='list "+classe_sentiment+"'>"+
 			"<img src='"+msg.imagem_thumb+"' class='avatar'>"+
