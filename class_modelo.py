@@ -58,9 +58,9 @@ class Models:
         self.models.append(('MLP',MLPClassifier(solver='lbfgs', alpha=1e-5,hidden_layer_sizes=(5, 2), random_state=1)))
         
         
-        for model in self.models:
+        for i in range(5):
             print("TRENEI")
-            model.fit(self.freq_tweets,self.target)
+            self.models[i].fit(self.freq_tweets,self.target)
   
         print("TERMINEI")
     def read_clean_dataset():
