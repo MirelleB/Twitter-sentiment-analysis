@@ -337,8 +337,10 @@ cursor:pointer;
 	var amountNegative=0;
 	var amountNeutral=0;
 	var amountPositive=0;
-	
-			
+	var y0 = [];
+	var y1 = [];
+	var y2 = [];	
+	var i=0;
 			
 	
         $(document).ready(function(){
@@ -361,18 +363,20 @@ cursor:pointer;
             // the data is displayed in the "Received" section of the page
             socket.on('stream_channel', function(msg) {
 			//console.log("Entreiiiiii")
-			
+			i=i+1;
 			$("#efeito_aguarde").css('display','none')
 			console.log(msg)
 			
 			if(msg.sentimento=='Positivo'){
 			amountPositive++;
+			y0[i]=amountPositive
 			classe_sentiment='positive';
 			}else if(msg.sentimento=='Negativo'){
-			
+			y1[i]=amountNegative
 			amountNegative++;
 			classe_sentiment='negative';
 			}else{
+			y2[i]=amountNeutral
 			amountNeutral++;
 			classe_sentiment='neutro';
 			
@@ -392,24 +396,26 @@ cursor:pointer;
 			Plotly.newPlot('myDiv', data, {}, {showSendToCloud:true});
 			
 			
-			var data_bolha = [{
-				x: [amountPositive, amountNegative, amountNeutral],
-				y: [amountPositive, amountNegative, amountNeutral],
+			
+			
 
-				mode: 'markers',
-				labels: ['Positivo', 'Negativo', 'Neutro'],
-				 marker: {
-						color:['rgba(20, 218, 20, 0.62)','rgba(237, 10, 10, 0.83)','rgba(51, 51, 224, 0.8)']
-					},
-				size: [40, 60, 100]
-			}];
-			var layout = {
-					title: 'Marker Size and Color',
-					showlegend: false,
-					height: 600,
-					width: 600
-				};
-			Plotly.newPlot('grafico-bolha', data_bolha, layout);
+			var trace1 = {
+				y: y0,
+				type: 'box'
+			};
+
+			var trace2 = {
+			y: y1,
+			type: 'box'
+		};
+			var trace3 = {
+			y: y2,
+			type: 'box'
+		};
+
+		var data_box = [trace1, trace2,trace3];
+
+		Plotly.newPlot('grafico-bolha', data_box);
 			
 				
 			var html="<div class='list "+classe_sentiment+"'>"+
