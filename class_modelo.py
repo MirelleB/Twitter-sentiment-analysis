@@ -41,10 +41,14 @@ class Models:
         twitter_train=train_dataset["Text"].values
         self.target =train_dataset["Classificacao"].values
         self.stopwords = nltk.corpus.stopwords.words('portuguese')
+        
+        print("REtirei stop words")
          
         #Vectorize the words 
         self.vectorizer = CountVectorizer(ngram_range = (1, 2),stop_words=self.stopwords)
         self.freq_tweets = self.vectorizer.fit_transform(twitter_train)
+        
+         print("OBTIVE FREQUENCIA")
         
         self.models = []
         self.models.append(('LR', LogisticRegression(C=1)))
@@ -55,6 +59,7 @@ class Models:
         
         
         for model in self.models:
+            print("TRENEI")
             model.fit(self.freq_tweets,self.target)
   
         print("TERMINEI")

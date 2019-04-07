@@ -45,6 +45,7 @@ auth.set_access_token(access_token,access_token_secret)
 
 q = Queue()
 
+predict_class_model=class_modelo.Models();
 
 #Method to clear the text
 def clean_twitter(text): 
@@ -59,10 +60,8 @@ def clean_twitter(text):
 
 #Method returns predicted class of new twitter 
 def predict_twitter(twtter_test):
-        print('Entrei na PREDICAO')
-        predict_class_model=class_modelo.Models();
+        
         predicted_class= predict_class_model.predict(twtter_test)[0];
-        print("CLASSE PREDITA")
         return predicted_class
 
 #class Stream Listener
@@ -110,7 +109,7 @@ def background_thread():
 
 @app.route('/')
 def index():
-    
+        
     
     global thread
     if thread is None:
