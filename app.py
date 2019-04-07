@@ -19,9 +19,6 @@ from flask_socketio import SocketIO, emit, join_room, leave_room, \
     close_room, rooms, disconnect
 from gevent.pywsgi import WSGIServer
 from geventwebsocket.handler import WebSocketHandler
-from json import dumps
-from kafka import KafkaProducer,KafkaConsumer
-from json import loads
     
     
 from tweepy.streaming import StreamListener
@@ -49,10 +46,6 @@ auth.set_access_token(access_token,access_token_secret)
 q = Queue()
 
 
-# Kafka Configuration
-producer = KafkaProducer(bootstrap_servers=['0.0.0.0:9092'], value_serializer=lambda x: dumps(x).encode('utf-8'))
-                        
-
 #Method to clear the text
 def clean_twitter(text): 
     twitter_clean=' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)", " ", text).split())
@@ -65,7 +58,6 @@ def clean_twitter(text):
     return twitter_clean
 
 #Method returns predicted class of new twitter 
-
 def predict_twitter(twtter_test):
     
         predicted_class= class_modelo.Models.predict(twtter_test)[0];
@@ -81,9 +73,8 @@ class TwitterListener(StreamListener):
         try: 
            
             tweet = json.loads(data)
-            producer.send('twitter_stream', tweet)
-            #text_processing(tweet)
-            #time.sleep(5)
+            text_processing(tweet)
+            time.sleep(5)
         except: 
             pass 
 
@@ -93,29 +84,25 @@ class TwitterListener(StreamListener):
         
 
 #Method to process and return result for socketio
-def text_processing():
-    print("ENTREI")
-    consumer = KafkaConsumer('twitter_stream', bootstrap_servers=['0.0.0.0:9092'], auto_offset_reset='earliest',enable_auto_commit=True,group_id='my-group',value_deserializer=lambda x: loads(x.decode('utf-8')))
+def text_processing(get_tweet):
     
-    for get_tweet in consumer:
-        print("Entrei no consumer",get_tweet)
-        text = clean_twitter(get_tweet['text'])
+    text = clean_twitter(get_tweet['text'])
           
-        twitters=[]
-        twitters.append(text)
+    twitters=[]
+    twitters.append(text)
             
     
-        sentiment=predict_twitter(twitters)
-        socketio.emit('stream_channel',
-                      {'data':get_tweet['text'], 'sentimento':sentiment,'imagem_thumb':get_tweet['user']['profile_image_url_https'],'objeto':get_tweet },
-                      namespace='/demo_streaming')
+    sentiment=predict_twitter(twitters)
+    socketio.emit('stream_channel',
+                  {'data':get_tweet['text'], 'sentimento':sentiment,'imagem_thumb':get_tweet['user']['profile_image_url_https'],'objeto':get_tweet },
+                  namespace='/demo_streaming')
         
             
    
     
 def background_thread():
     stream = Stream(auth, l)
-    stream.filter(follow=None, track='politica', languages=["pt"]) 
+    stream.filter(follow=None, track='politica',retry_delay=5, languages=["pt"]) 
     
 
 
@@ -125,11 +112,9 @@ def index():
     
     global thread
     if thread is None:
-          print("VAMOS LA")
           thread = Thread(target=background_thread)
           thread.daemon = True
           thread.start()
-          text_processing()
            
     return render_template('index.html')
 
