@@ -38,33 +38,23 @@ class Models:
         
         print("INICIALIZANDO")
         train_dataset=Models.read_clean_dataset()
+        
         twitter_train=train_dataset["Text"].values
-        self.target =train_dataset["Classificacao"].values
-        self.stopwords = nltk.corpus.stopwords.words('portuguese')
+        
+        target =train_dataset["Classificacao"].values
+        stopwords = nltk.corpus.stopwords.words('portuguese')
         
         print("REtirei stop words")
          
         #Vectorize the words 
-        self.vectorizer = CountVectorizer(ngram_range = (1, 2),stop_words=self.stopwords)
-        self.freq_tweets = self.vectorizer.fit_transform(twitter_train)
+        self.vectorizer = CountVectorizer(ngram_range = (1, 2),stop_words=stopwords)
+        freq_tweets = self.vectorizer.fit_transform(twitter_train)
         
         print("OBTIVE FREQUENCIA")
         
-        self.models = []
-        self.models.append(('LR', LogisticRegression(C=1)))
-        self.models.append(('SVC', LinearSVC(C=0.5)))
-        self.models.append(('NB', MultinomialNB()))
-        self.models.append(('Random Forest', RandomForestClassifier(n_estimators = 100)))
-        self.models.append(('MLP',MLPClassifier(solver='lbfgs', alpha=1e-5,hidden_layer_sizes=(5, 2), random_state=1)))
+        self.modelNB = MultinomialNB()
+        self.modelNB.fit(freq_tweets, target)
         
-        
-        for i in range(5):
-            print("TRENEI")
-            self.models[i][1].fit(self.freq_tweets,self.target)
-  
-        self.ensemble = VotingClassifier(self.models)
-        
-        self.ensemble.fit(self.freq_tweets, self.target)
         print("TERMINEI")
     def read_clean_dataset():
     
@@ -98,10 +88,10 @@ class Models:
     
         freq_test = self.vectorizer.transform(new_twitter)
         
-        y_ensemble=self.ensemble.predict(freq_test)
-        print("ALOOO BRASIL RETORNANDO")
+        y_predict_NB=self.modelNB.predict(freq_test)
+       
         #print("concuit")
-        return y_ensemble
+        return y_predict_NB
 
 
 
