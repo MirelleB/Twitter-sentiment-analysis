@@ -382,8 +382,7 @@ cursor:pointer;
 			if(msg.sentimento=='Positivo'){
 			amountPositive++;
 			y0[i]=amountPositive
-			y1[i]=0;
-			y2[i]=0;
+			
 			
 			classe_sentiment='positive';
 			}else if(msg.sentimento=='Negativo'){
@@ -391,14 +390,12 @@ cursor:pointer;
 			amountNegative++;
 			
 			y1[i]=amountNegative;
-			y0[i]=0;
-			y2[i]=0;
+		
 			classe_sentiment='negative';
 			}else{
 			amountNeutral++;
 			y2[i]=amountNeutral
-			y0[i]=0;
-			y1[i]=0;
+			
 			classe_sentiment='neutro';
 			
 			}
