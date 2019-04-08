@@ -103,6 +103,7 @@ def text_processing(get_tweet):
    
     
 def background_thread():
+    print("ENTREII BACKhroud... conetando")
     stream = Stream(auth, l,retry_delay=5)
     stream.filter(follow=None, track='politica', languages=["pt"]) 
     
@@ -111,7 +112,7 @@ def background_thread():
 @app.route('/')
 def index():
         
-    
+    print("INicio")
     global thread
     if thread is None:
           thread = Thread(target=background_thread)
