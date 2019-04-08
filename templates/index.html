@@ -170,6 +170,13 @@ font-family:"Arial"
  float:left;
 }
 
+#grafico-bolha{
+
+width:100%
+height:600px
+display:inline-block
+}
+
     .sk-folding-cube {
   margin: 20px auto;
       width: 75px;
@@ -325,7 +332,7 @@ cursor:pointer;
 				
 					
 				</div>
-				</div>	
+		</div>	
 
 				<div id="grafico-bolha"></div>
 				
@@ -341,7 +348,8 @@ cursor:pointer;
 	var y1 = [];
 	var y2 = [];	
 	var i=0;
-			
+	var grafico_pizza=Plotly;
+	var grafico_Box=Plotly;
 	
         $(document).ready(function(){
 			$("#efeito_aguarde").css('display','block')
@@ -393,29 +401,29 @@ cursor:pointer;
 					},
 				type: 'pie'
 			}];
-			Plotly.newPlot('myDiv', data, {}, {showSendToCloud:true});
+			grafico_pizza.newPlot('myDiv', data, {}, {showSendToCloud:true});
 			
 			
 			
 			
 
-			var trace1 = {
+			var Positivo = {
 				y: y0,
 				type: 'box'
 			};
 
-			var trace2 = {
+			var Negativo  = {
 			y: y1,
 			type: 'box'
 		};
-			var trace3 = {
+			var Neutro = {
 			y: y2,
 			type: 'box'
 		};
 
-		var data_box = [trace1, trace2,trace3];
+		var data_box = [Positivo, Negativo,Neutro];
 
-		Plotly.newPlot('grafico-bolha', data_box);
+		grafico_Box.newPlot('grafico-bolha', data_box);
 			
 				
 			var html="<div class='list "+classe_sentiment+"'>"+
