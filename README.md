@@ -1,6 +1,6 @@
 Twitter sentiment analysis
 
-A demostração do trabalho, pode ser acessada: http://twitter-sentiment-analysi.herokuapp.com/
+A demostração do trabalho pode ser acessada: http://twitter-sentiment-analysi.herokuapp.com/
 
 Sobre a Documentação completa, algoritmos utilizados, métricas e etc, deve acessar a pasta Models/Case Study.ipynd
 
