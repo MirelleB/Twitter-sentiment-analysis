@@ -348,6 +348,7 @@ cursor:pointer;
 	var y1 = [];
 	var y2 = [];	
 	var i=0;
+	var x=[]
 	var grafico_pizza=Plotly;
 	var grafico_Box=Plotly;
 	
@@ -370,22 +371,34 @@ cursor:pointer;
             // event handler for server sent data
             // the data is displayed in the "Received" section of the page
             socket.on('stream_channel', function(msg) {
+			
 			//console.log("Entreiiiiii")
 			i=i+1;
+			
+			x[i]=i;
 			$("#efeito_aguarde").css('display','none')
 			console.log(msg)
 			
 			if(msg.sentimento=='Positivo'){
 			amountPositive++;
-			y0[i]=i
+			y0[i]=amountPositive
+			y1[i]=0;
+			y2[i]=0;
+			
 			classe_sentiment='positive';
 			}else if(msg.sentimento=='Negativo'){
-			y1[i]=i
+			
 			amountNegative++;
+			
+			y1[i]=amountNegative;
+			y0[i]=0;
+			y2[i]=0;
 			classe_sentiment='negative';
 			}else{
-			y2[i]=i
 			amountNeutral++;
+			y2[i]=amountNeutral
+			y0[i]=0;
+			y1[i]=0;
 			classe_sentiment='neutro';
 			
 			}
@@ -408,27 +421,26 @@ cursor:pointer;
 			
 
 			var Positivo = {
+				 x: x,
 				y: y0,
-				type: 'box',
-				name: 'Positivo',
-				color:'rgba(20, 218, 20, 0.62)'
+				name:'Positivo',
+				type: 'scatter'
 			};
 
 			var Negativo  = {
+			 x: x,
 			y: y1,
-			type: 'box',
-			name: 'Negativo',
-			color:'rgba(237, 10, 10, 0.83)'
+			name:'Negativo',
+			type: 'scatter'
+			
 		};
 			var Neutro = {
+			 x: x,
 			y: y2,
-			type: 'box',
-			name: 'Neutro',
-			color:'rgba(51, 51, 224, 0.8)'
+			name:'Neutro',
+			type: 'scatter'
 		};
-		var layout = {
-			title: 'Box Plot comparativo de sentimento'
-		};
+		
 
 		var data_box = [Positivo, Negativo,Neutro];
 
